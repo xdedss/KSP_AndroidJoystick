@@ -13,6 +13,7 @@ public class ConnectionInitializer : MonoBehaviour {
     public Joystick joystickL;
     public Joystick joystickR;
     public InputField ipField;
+    public Slider throttle;
     public bool[] toggles = new bool[16];
 
     SocketClient socketClient;
@@ -53,6 +54,7 @@ public class ConnectionInitializer : MonoBehaviour {
     {
         var j1 = (joystickL.Value + Vector2.one) / 2 * 255;
         var j2 = (joystickR.Value + Vector2.one) / 2 * 255;
+        var throttleB = throttle.value * 255;
         //return string.Format("{0}|{1}|{2}|{3}|", j1.x.ToString("0.00"), j1.y.ToString("0.00"), j2.x.ToString("0.00"), j2.y.ToString("0.00"));
         var masks = GetMasks();
         var bytes = new byte[]
@@ -61,6 +63,7 @@ public class ConnectionInitializer : MonoBehaviour {
             (byte)Mathf.RoundToInt(j1.y),
             (byte)Mathf.RoundToInt(j2.x),
             (byte)Mathf.RoundToInt(j2.y),
+            (byte)Mathf.RoundToInt(throttleB),
             masks[0],
             masks[1],
         };
