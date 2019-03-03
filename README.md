@@ -1,5 +1,5 @@
 # KSP_AndroidJoystick
-这是一个Unity项目，release里有打包好的apk
+这是一个Unity项目，[release](https://github.com/xdedss/KSP_AndroidJoystick/releases)里有打包好的apk  
 [使用演示](https://www.bilibili.com/video/av45173698)
 ## 使用方法
 - 电脑上打开游戏（安装有KRPC的Mod），运行[KRPCController](https://github.com/xdedss/KRPCController_)，打开游戏内的服务端，让KRPCController连接到游戏中
