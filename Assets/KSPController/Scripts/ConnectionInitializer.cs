@@ -15,6 +15,7 @@ public class ConnectionInitializer : MonoBehaviour {
     public InputField ipField;
     public Slider throttle;
     public Slider trim;
+    public Slider rudder;
     public bool[] toggles = new bool[16];
 
     SocketClient socketClient;
@@ -59,6 +60,7 @@ public class ConnectionInitializer : MonoBehaviour {
         var j1 = (j1raw + Vector2.one) / 2 * 255;
         var j2 = (j2raw + Vector2.one) / 2 * 255;
         var throttleB = throttle.value * 255;
+        var rud = j1.x;
         //return string.Format("{0}|{1}|{2}|{3}|", j1.x.ToString("0.00"), j1.y.ToString("0.00"), j2.x.ToString("0.00"), j2.y.ToString("0.00"));
         var masks = GetMasks();
         var bytes = new byte[]
@@ -68,6 +70,7 @@ public class ConnectionInitializer : MonoBehaviour {
             (byte)Mathf.RoundToInt(j2.x),
             (byte)Mathf.RoundToInt(j2.y),
             (byte)Mathf.RoundToInt(throttleB),
+            (byte)Mathf.RoundToInt(rud),
             masks[0],
             masks[1],
         };

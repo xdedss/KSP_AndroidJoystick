@@ -4622,7 +4622,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0.25}
   m_AnchorMax: {x: 1, y: 0.75}
-  m_AnchoredPosition: {x: -5, y: 0.000045776367}
+  m_AnchoredPosition: {x: -5, y: 0.000061035156}
   m_SizeDelta: {x: -20, y: 63.9}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &1747233578
@@ -4656,7 +4656,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0.25}
   m_AnchorMax: {x: 1, y: 0.75}
-  m_AnchoredPosition: {x: -5, y: 0.000045776367}
+  m_AnchoredPosition: {x: -5, y: 0.000061035156}
   m_SizeDelta: {x: -20, y: 63.9}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &1831159196
@@ -5511,6 +5511,7 @@ MonoBehaviour:
   ipField: {fileID: 886835880}
   throttle: {fileID: 69415366}
   trim: {fileID: 1854455264}
+  rudder: {fileID: 0}
   toggles: 00000000000000000000000000000000
 --- !u!1 &2104958015
 GameObject:
