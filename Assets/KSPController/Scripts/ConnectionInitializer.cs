@@ -16,8 +16,12 @@ public class ConnectionInitializer : MonoBehaviour {
     public Slider throttle;
     public Slider trim;
     public JoystickSingle rudder;
-    public Transform gimbal;
     public bool[] toggles = new bool[16];
+
+    public Transform gimbal;
+    public TextMesh speedIndicator;
+    public TextMesh headingIndicator;
+    public Transform compass;
 
     SocketClient socketClient;
     Coroutine sendCoroutine;
@@ -72,6 +76,9 @@ public class ConnectionInitializer : MonoBehaviour {
         float hdg = (float)hdgs / 65535 * 360;
         float srfVel = BitConverter.ToSingle(data, 6);
         gimbal.eulerAngles = new Vector3(-pitch, 0, roll);
+        speedIndicator.text = srfVel.ToString(".00") + " m/s";
+        headingIndicator.text = Mathf.RoundToInt(hdg) + "°";
+        compass.eulerAngles = new Vector3(0, 0, hdg);
         Debug.Log(string.Format("pitch:{0}\nroll:{1}\nhdg:{2}\nsrfvel:{3}\n", pitch, roll, hdg, srfVel));
     }
 
