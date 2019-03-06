@@ -15,7 +15,8 @@ public class ConnectionInitializer : MonoBehaviour {
     public InputField ipField;
     public Slider throttle;
     public Slider trim;
-    public Slider rudder;
+    public JoystickSingle rudder;
+    public Transform gimbal;
     public bool[] toggles = new bool[16];
 
     SocketClient socketClient;
@@ -35,9 +36,9 @@ public class ConnectionInitializer : MonoBehaviour {
     }
 	
 	void Update () {
-        if (Input.GetKeyDown(KeyCode.S))
+        if (socketClient != null)
         {
-            Init();
+            Receive();
         }
 	}
 
@@ -52,6 +53,28 @@ public class ConnectionInitializer : MonoBehaviour {
         sendCoroutine = StartCoroutine(SendBundle());
     }
 
+    void Receive()
+    {
+        var data = socketClient.Receive();
+        if(data != null)
+        {
+            HandleInfoData(data);
+        }
+    }
+
+    void HandleInfoData(byte[] data)
+    {
+        ushort pitchs = BitConverter.ToUInt16(data, 0);
+        ushort rolls = BitConverter.ToUInt16(data, 2);
+        ushort hdgs = BitConverter.ToUInt16(data, 4);
+        float pitch = (float)pitchs / 65535 * 180 - 90;
+        float roll = (float)rolls / 65535 * 360 - 180;
+        float hdg = (float)hdgs / 65535 * 360;
+        float srfVel = BitConverter.ToSingle(data, 6);
+        gimbal.eulerAngles = new Vector3(-pitch, 0, roll);
+        Debug.Log(string.Format("pitch:{0}\nroll:{1}\nhdg:{2}\nsrfvel:{3}\n", pitch, roll, hdg, srfVel));
+    }
+
     byte[] Bundle()
     {
         var j1raw = joystickL.Value;
@@ -60,7 +83,7 @@ public class ConnectionInitializer : MonoBehaviour {
         var j1 = (j1raw + Vector2.one) / 2 * 255;
         var j2 = (j2raw + Vector2.one) / 2 * 255;
         var throttleB = throttle.value * 255;
-        var rud = j1.x;
+        var rud = (rudder.Value + 1) / 2 * 255;
         //return string.Format("{0}|{1}|{2}|{3}|", j1.x.ToString("0.00"), j1.y.ToString("0.00"), j2.x.ToString("0.00"), j2.y.ToString("0.00"));
         var masks = GetMasks();
         var bytes = new byte[]
@@ -114,15 +137,15 @@ public class ConnectionInitializer : MonoBehaviour {
         while (true)
         {
             yield return new WaitForSeconds(0.05f);
-            try
-            {
+            //try
+            //{
                 socketClient.SendBytes(Bundle());
-            }
-            catch(Exception e)
-            {
-                Debug.LogError(e.Message + '\n' + e.StackTrace);
-                break;
-            }
+            //}
+            //catch(Exception e)
+            //{
+            //    Debug.LogError(e.Message + '\n' + e.StackTrace);
+            //    break;
+            //}
         }
     }
 }

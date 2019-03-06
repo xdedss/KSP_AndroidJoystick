@@ -22,6 +22,18 @@ public static class Ext {
         return me;
     }
 
+    public static Vector2 SetX(this Vector2 me, float x)
+    {
+        me.x = x;
+        return me;
+    }
+
+    public static Vector2 SetY(this Vector2 me, float y)
+    {
+        me.y = y;
+        return me;
+    }
+
     public static Vector3 V3(this Vector4 v4)
     {
         return new Vector3(v4.x, v4.y, v4.z);

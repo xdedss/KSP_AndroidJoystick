@@ -83,5 +83,17 @@ namespace SocketUtil
         {
             _socket.Send(bytes);
         }
+
+        public byte[] Receive()
+        {
+            if (_socket.Available > 0)
+            {
+                int length = _socket.Receive(buffer);
+                var bytes = new byte[length];
+                Array.ConstrainedCopy(buffer, 0, bytes, 0, length);
+                return bytes;
+            }
+            return null;
+        }
     }
 }
