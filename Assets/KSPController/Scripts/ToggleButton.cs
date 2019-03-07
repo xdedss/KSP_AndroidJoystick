@@ -38,7 +38,7 @@ public class ToggleButton : MonoBehaviour {
 
     void OnClick()
     {
-        ConnectionInitializer.instance.toggles[index] = true;
+        ConnectionInitializer.instance.toggles[index] ^= true;
         //Debug.Log(gameObject.name);
     }
 }

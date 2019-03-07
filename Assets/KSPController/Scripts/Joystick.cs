@@ -8,7 +8,11 @@ public class Joystick : MonoBehaviour {
 
     public float radius = 120;
     public RectTransform stick;
+    public bool isDragging = false;
     RectTransform rectTransform;
+
+    public bool gyroOverride = false;
+    public Slider gyroSensitivity;
 
     Vector3 targetPosition = Vector2.zero;
 
@@ -34,7 +38,11 @@ public class Joystick : MonoBehaviour {
 
     private void Update()
     {
-        //Debug.Log(Value);
+        if(gyroOverride && !isDragging)
+        {
+            ChangePosition(radius * Gyro.Value * gyroSensitivity.value);
+        }
+
         var target = transform.position + targetPosition;
         stick.position = Vector3.Lerp(stick.position, target, Mathf.Clamp01(Time.deltaTime * 20));
     }
@@ -43,18 +51,21 @@ public class Joystick : MonoBehaviour {
     {
         var data = dataraw as PointerEventData;
         ChangePosition(data.position.V3(0) - transform.position);
+        isDragging = true;
     }
 
     public void TouchUp(BaseEventData dataraw)
     {
         var data = dataraw as PointerEventData;
         ChangePosition(Vector3.zero);
+        isDragging = false;
     }
 
     public void Drag(BaseEventData dataraw)
     {
         var data = dataraw as PointerEventData;
         ChangePosition(data.position.V3(0) - transform.position);
+        isDragging = true;
     }
 
     void ChangePosition(Vector3 localPos)

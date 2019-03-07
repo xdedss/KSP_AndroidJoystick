@@ -7,6 +7,7 @@ public class JoystickSingle : MonoBehaviour {
 
     public float radius = 120;
     public RectTransform stick;
+    public bool isDragging = false;
     RectTransform rectTransform;
 
     Vector3 targetPosition = Vector2.zero;
@@ -41,18 +42,21 @@ public class JoystickSingle : MonoBehaviour {
     {
         var data = dataraw as PointerEventData;
         ChangePosition(data.position.V3(0) - transform.position);
+        isDragging = true;
     }
 
     public void TouchUp(BaseEventData dataraw)
     {
         var data = dataraw as PointerEventData;
         ChangePosition(Vector3.zero);
+        isDragging = false;
     }
 
     public void Drag(BaseEventData dataraw)
     {
         var data = dataraw as PointerEventData;
         ChangePosition(data.position.V3(0) - transform.position);
+        isDragging = true;
     }
 
     void ChangePosition(Vector3 localPos)

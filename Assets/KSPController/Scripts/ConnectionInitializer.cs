@@ -9,7 +9,10 @@ using System;
 public class ConnectionInitializer : MonoBehaviour {
 
     public static ConnectionInitializer instance;
+    public Text debugText;
 
+    [Space]
+    public Gyro gyro;
     public Joystick joystickL;
     public Joystick joystickR;
     public InputField ipField;
@@ -36,7 +39,7 @@ public class ConnectionInitializer : MonoBehaviour {
     }
 
     void Start () {
-        
+        ipField.text = PlayerPrefs.GetString("server", "");
     }
 	
 	void Update () {
@@ -48,7 +51,21 @@ public class ConnectionInitializer : MonoBehaviour {
 
     public void Init()
     {
-        socketClient = new SocketClient(ipField.text, 8080);
+        var split = ipField.text.Split(':');
+        if (split.Length <= 0) return;
+        PlayerPrefs.SetString("server", ipField.text);
+        PlayerPrefs.Save();
+
+        var port = 23333;
+        var ip = split[0];
+        if(split.Length > 1)
+        {
+            if(!int.TryParse(split[1], out port))
+            {
+                port = 23333;
+            }
+        }
+        socketClient = new SocketClient(ip, port);
         socketClient.StartClient();
         if(sendCoroutine != null)
         {
@@ -68,18 +85,28 @@ public class ConnectionInitializer : MonoBehaviour {
 
     void HandleInfoData(byte[] data)
     {
-        ushort pitchs = BitConverter.ToUInt16(data, 0);
-        ushort rolls = BitConverter.ToUInt16(data, 2);
-        ushort hdgs = BitConverter.ToUInt16(data, 4);
-        float pitch = (float)pitchs / 65535 * 180 - 90;
-        float roll = (float)rolls / 65535 * 360 - 180;
-        float hdg = (float)hdgs / 65535 * 360;
-        float srfVel = BitConverter.ToSingle(data, 6);
-        gimbal.eulerAngles = new Vector3(-pitch, 0, roll);
+        Vector3 srfVel = new Vector3(BitConverter.ToSingle(data, 0), BitConverter.ToSingle(data, 4), BitConverter.ToSingle(data, 8));
+        var rotX = (float)BitConverter.ToUInt16(data, 12) / 65535 * 2 - 1;
+        var rotY = (float)BitConverter.ToUInt16(data, 14) / 65535 * 2 - 1;
+        var rotZ = (float)BitConverter.ToUInt16(data, 16) / 65535 * 2 - 1;
+        var rotW = (float)BitConverter.ToUInt16(data, 18) / 65535 * 2 - 1;
+        Quaternion rotation = new Quaternion(rotX, rotY, rotZ, rotW);
+        byte flags = data[20];
+        //ushort pitchs = BitConverter.ToUInt16(data, 0);
+        //ushort rolls = BitConverter.ToUInt16(data, 2);
+        //ushort hdgs = BitConverter.ToUInt16(data, 4);
+        //float pitch = (float)pitchs / 65535 * 180 - 90;
+        //float roll = (float)rolls / 65535 * 360 - 180;
+        //float hdg = (float)hdgs / 65535 * 360;
+        //float srfVel = BitConverter.ToSingle(data, 6);
+
+        //gimbal.eulerAngles = new Vector3(-pitch, 0, roll);
+        gimbal.rotation = rotation;
         speedIndicator.text = srfVel.ToString(".00") + " m/s";
-        headingIndicator.text = Mathf.RoundToInt(hdg) + "°";
-        compass.eulerAngles = new Vector3(0, 0, hdg);
-        Debug.Log(string.Format("pitch:{0}\nroll:{1}\nhdg:{2}\nsrfvel:{3}\n", pitch, roll, hdg, srfVel));
+        //headingIndicator.text = Mathf.RoundToInt(hdg) + "°";
+        //compass.eulerAngles = new Vector3(0, 0, hdg);
+        Debug.Log(string.Format("vel:{0},rot:{1},flags:{2}", srfVel, rotation, flags));
+        //Debug.Log(string.Format("pitch:{0}\nroll:{1}\nhdg:{2}\nsrfvel:{3}\n", pitch, roll, hdg, srfVel));
     }
 
     byte[] Bundle()
@@ -115,7 +142,7 @@ public class ConnectionInitializer : MonoBehaviour {
         {
             if (toggles[i])
             {
-                toggles[i] = false;
+                //toggles[i] = false;
                 mask1 |= ByteMask(i);
             }
         }
@@ -123,7 +150,7 @@ public class ConnectionInitializer : MonoBehaviour {
         {
             if (toggles[i])
             {
-                toggles[i] = false;
+                //toggles[i] = false;
                 mask2 |= ByteMask(i - 8);
             }
         }
