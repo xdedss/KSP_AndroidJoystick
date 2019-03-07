@@ -305,8 +305,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   index: 7
-  colorOn: {r: 0.5, g: 1, b: 1, a: 1}
-  colorOff: {r: 0.8, g: 0.8, b: 0.8, a: 1}
+  colorOn: {r: 1, g: 1, b: 1, a: 1}
+  colorOff: {r: 1, g: 1, b: 1, a: 1}
 --- !u!1 &55204362
 GameObject:
   m_ObjectHideFlags: 0
@@ -1063,8 +1063,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   index: 11
-  colorOn: {r: 0.5, g: 1, b: 1, a: 1}
-  colorOff: {r: 0.8, g: 0.8, b: 0.8, a: 1}
+  colorOn: {r: 0.7554948, g: 1, b: 0.75, a: 1}
+  colorOff: {r: 1, g: 1, b: 1, a: 1}
 --- !u!1 &228865889
 GameObject:
   m_ObjectHideFlags: 0
@@ -1405,8 +1405,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   index: 10
-  colorOn: {r: 0.5, g: 1, b: 1, a: 1}
-  colorOff: {r: 0.8, g: 0.8, b: 0.8, a: 1}
+  colorOn: {r: 0.7554948, g: 1, b: 0.75, a: 1}
+  colorOff: {r: 1, g: 1, b: 1, a: 1}
 --- !u!1 &282840810
 GameObject:
   m_ObjectHideFlags: 0
@@ -1818,8 +1818,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   index: 0
-  colorOn: {r: 0.5, g: 1, b: 1, a: 1}
-  colorOff: {r: 0.8, g: 0.8, b: 0.8, a: 1}
+  colorOn: {r: 1, g: 1, b: 1, a: 1}
+  colorOff: {r: 1, g: 1, b: 1, a: 1}
 --- !u!1 &366232704
 GameObject:
   m_ObjectHideFlags: 0
@@ -2084,8 +2084,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   index: 3
-  colorOn: {r: 0.5, g: 1, b: 1, a: 1}
-  colorOff: {r: 0.8, g: 0.8, b: 0.8, a: 1}
+  colorOn: {r: 1, g: 1, b: 1, a: 1}
+  colorOff: {r: 1, g: 1, b: 1, a: 1}
 --- !u!1 &375082932
 GameObject:
   m_ObjectHideFlags: 0
@@ -2682,8 +2682,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   index: 8
-  colorOn: {r: 0.5, g: 1, b: 1, a: 1}
-  colorOff: {r: 0.8, g: 0.8, b: 0.8, a: 1}
+  colorOn: {r: 1, g: 1, b: 1, a: 1}
+  colorOff: {r: 1, g: 1, b: 1, a: 1}
 --- !u!1 &552216767
 GameObject:
   m_ObjectHideFlags: 0
@@ -3763,8 +3763,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   index: 2
-  colorOn: {r: 0.5, g: 1, b: 1, a: 1}
-  colorOff: {r: 0.8, g: 0.8, b: 0.8, a: 1}
+  colorOn: {r: 1, g: 1, b: 1, a: 1}
+  colorOff: {r: 1, g: 1, b: 1, a: 1}
 --- !u!1 &914985638
 GameObject:
   m_ObjectHideFlags: 0
@@ -4099,8 +4099,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   index: 6
-  colorOn: {r: 0.5, g: 1, b: 1, a: 1}
-  colorOff: {r: 0.8, g: 0.8, b: 0.8, a: 1}
+  colorOn: {r: 1, g: 1, b: 1, a: 1}
+  colorOff: {r: 1, g: 1, b: 1, a: 1}
 --- !u!1 &1004956716
 GameObject:
   m_ObjectHideFlags: 0
@@ -4332,8 +4332,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   index: 5
-  colorOn: {r: 0.5, g: 1, b: 1, a: 1}
-  colorOff: {r: 0.8, g: 0.8, b: 0.8, a: 1}
+  colorOn: {r: 1, g: 1, b: 1, a: 1}
+  colorOff: {r: 1, g: 1, b: 1, a: 1}
 --- !u!1 &1051764802
 GameObject:
   m_ObjectHideFlags: 0
@@ -4596,8 +4596,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   index: 15
-  colorOn: {r: 0.5, g: 1, b: 1, a: 1}
-  colorOff: {r: 0.8, g: 0.8, b: 0.8, a: 1}
+  colorOn: {r: 1, g: 1, b: 1, a: 1}
+  colorOff: {r: 1, g: 1, b: 1, a: 1}
 --- !u!222 &1087507364
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -5410,8 +5410,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   index: 4
-  colorOn: {r: 0.5, g: 1, b: 1, a: 1}
-  colorOff: {r: 0.8, g: 0.8, b: 0.8, a: 1}
+  colorOn: {r: 1, g: 1, b: 1, a: 1}
+  colorOff: {r: 1, g: 1, b: 1, a: 1}
 --- !u!1 &1363168051
 GameObject:
   m_ObjectHideFlags: 0
@@ -5713,8 +5713,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   index: 14
-  colorOn: {r: 0.5, g: 1, b: 1, a: 1}
-  colorOff: {r: 0.8, g: 0.8, b: 0.8, a: 1}
+  colorOn: {r: 0.7554948, g: 1, b: 0.75, a: 1}
+  colorOff: {r: 1, g: 1, b: 1, a: 1}
 --- !u!222 &1391213453
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -6268,8 +6268,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   index: 13
-  colorOn: {r: 0.5, g: 1, b: 1, a: 1}
-  colorOff: {r: 0.8, g: 0.8, b: 0.8, a: 1}
+  colorOn: {r: 0.7554948, g: 1, b: 0.75, a: 1}
+  colorOff: {r: 1, g: 1, b: 1, a: 1}
 --- !u!1 &1710007638
 GameObject:
   m_ObjectHideFlags: 0
@@ -6916,8 +6916,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   index: 1
-  colorOn: {r: 0.5, g: 1, b: 1, a: 1}
-  colorOff: {r: 0.8, g: 0.8, b: 0.8, a: 1}
+  colorOn: {r: 1, g: 1, b: 1, a: 1}
+  colorOff: {r: 1, g: 1, b: 1, a: 1}
 --- !u!1 &1956156022
 GameObject:
   m_ObjectHideFlags: 0
@@ -7264,8 +7264,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   index: 9
-  colorOn: {r: 0.5, g: 1, b: 1, a: 1}
-  colorOff: {r: 0.8, g: 0.8, b: 0.8, a: 1}
+  colorOn: {r: 1, g: 1, b: 1, a: 1}
+  colorOff: {r: 1, g: 1, b: 1, a: 1}
 --- !u!1 &2045812638
 GameObject:
   m_ObjectHideFlags: 0
@@ -7526,10 +7526,10 @@ MonoBehaviour:
   gyro: {fileID: 2096735422}
   joystickL: {fileID: 1245552630}
   joystickR: {fileID: 1131590212}
-  ipField: {fileID: 886835880}
-  throttle: {fileID: 69415366}
-  trim: {fileID: 1854455264}
-  rudder: {fileID: 552216772}
+  fieldIP: {fileID: 886835880}
+  sliderThrottle: {fileID: 69415366}
+  sliderTrim: {fileID: 1854455264}
+  joystickRudder: {fileID: 552216772}
   toggles: 00000000000000000000000000000000
   gimbal: {fileID: 1004956717}
   speedIndicator: {fileID: 1530052322}
@@ -7739,5 +7739,5 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   index: 12
-  colorOn: {r: 0.5, g: 1, b: 1, a: 1}
-  colorOff: {r: 0.8, g: 0.8, b: 0.8, a: 1}
+  colorOn: {r: 0.7554948, g: 1, b: 0.75, a: 1}
+  colorOff: {r: 1, g: 1, b: 1, a: 1}

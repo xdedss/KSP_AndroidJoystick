@@ -95,5 +95,12 @@ namespace SocketUtil
             }
             return null;
         }
+        public byte[] ReceiveBlocked()
+        {
+            int length = _socket.Receive(buffer);
+            var bytes = new byte[length];
+            Array.ConstrainedCopy(buffer, 0, bytes, 0, length);
+            return bytes;
+        }
     }
 }

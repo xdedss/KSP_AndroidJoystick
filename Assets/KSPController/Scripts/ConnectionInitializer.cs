@@ -15,10 +15,10 @@ public class ConnectionInitializer : MonoBehaviour {
     public Gyro gyro;
     public Joystick joystickL;
     public Joystick joystickR;
-    public InputField ipField;
-    public Slider throttle;
-    public Slider trim;
-    public JoystickSingle rudder;
+    public InputField fieldIP;
+    public Slider sliderThrottle;
+    public Slider sliderTrim;
+    public JoystickSingle joystickRudder;
     public bool[] toggles = new bool[16];
 
     public Transform gimbal;
@@ -39,7 +39,7 @@ public class ConnectionInitializer : MonoBehaviour {
     }
 
     void Start () {
-        ipField.text = PlayerPrefs.GetString("server", "");
+        fieldIP.text = PlayerPrefs.GetString("server", "");
     }
 	
 	void Update () {
@@ -51,9 +51,9 @@ public class ConnectionInitializer : MonoBehaviour {
 
     public void Init()
     {
-        var split = ipField.text.Split(':');
+        var split = fieldIP.text.Split(':');
         if (split.Length <= 0) return;
-        PlayerPrefs.SetString("server", ipField.text);
+        PlayerPrefs.SetString("server", fieldIP.text);
         PlayerPrefs.Save();
 
         var port = 23333;
@@ -67,6 +67,7 @@ public class ConnectionInitializer : MonoBehaviour {
         }
         socketClient = new SocketClient(ip, port);
         socketClient.StartClient();
+        HandleInitialData(socketClient.ReceiveBlocked());
         if(sendCoroutine != null)
         {
             StopCoroutine(sendCoroutine);
@@ -80,6 +81,20 @@ public class ConnectionInitializer : MonoBehaviour {
         if(data != null)
         {
             HandleInfoData(data);
+        }
+    }
+
+    void HandleInitialData(byte[] data)
+    {
+        if (data.Length >= 2)
+        {
+            var throttleValue = (float)data[0] / 255;
+            sliderThrottle.value = throttleValue;
+            ToggleButton.buttons[10].SetOn((data[1] & ByteMask(0)) != 0);
+            ToggleButton.buttons[11].SetOn((data[1] & ByteMask(1)) != 0);
+            ToggleButton.buttons[12].SetOn((data[1] & ByteMask(2)) != 0);
+            ToggleButton.buttons[13].SetOn((data[1] & ByteMask(3)) != 0);
+            ToggleButton.buttons[14].SetOn((data[1] & ByteMask(4)) != 0);
         }
     }
 
@@ -113,11 +128,11 @@ public class ConnectionInitializer : MonoBehaviour {
     {
         var j1raw = joystickL.Value;
         var j2raw = joystickR.Value;
-        j2raw.y = Mathf.Clamp(j2raw.y + trim.value * 0.6f, -1, 1);
+        j2raw.y = Mathf.Clamp(j2raw.y + sliderTrim.value * 0.6f, -1, 1);
         var j1 = (j1raw + Vector2.one) / 2 * 255;
         var j2 = (j2raw + Vector2.one) / 2 * 255;
-        var throttleB = throttle.value * 255;
-        var rud = (rudder.Value + 1) / 2 * 255;
+        var throttleB = sliderThrottle.value * 255;
+        var rud = (joystickRudder.Value + 1) / 2 * 255;
         //return string.Format("{0}|{1}|{2}|{3}|", j1.x.ToString("0.00"), j1.y.ToString("0.00"), j2.x.ToString("0.00"), j2.y.ToString("0.00"));
         var masks = GetMasks();
         var bytes = new byte[]
