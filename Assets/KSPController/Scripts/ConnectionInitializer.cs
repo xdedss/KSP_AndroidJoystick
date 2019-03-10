@@ -95,6 +95,7 @@ public class ConnectionInitializer : MonoBehaviour {
             ToggleButton.buttons[12].SetOn((data[1] & ByteMask(2)) != 0);
             ToggleButton.buttons[13].SetOn((data[1] & ByteMask(3)) != 0);
             ToggleButton.buttons[14].SetOn((data[1] & ByteMask(4)) != 0);
+            ToggleButton.buttons[15].SetOn((data[1] & ByteMask(5)) != 0);
         }
     }
 
@@ -106,22 +107,25 @@ public class ConnectionInitializer : MonoBehaviour {
         var rotZ = (float)BitConverter.ToUInt16(data, 16) / 65535 * 2 - 1;
         var rotW = (float)BitConverter.ToUInt16(data, 18) / 65535 * 2 - 1;
         Quaternion rotation = new Quaternion(rotX, rotY, rotZ, rotW);
-        byte flags = data[20];
-        //ushort pitchs = BitConverter.ToUInt16(data, 0);
-        //ushort rolls = BitConverter.ToUInt16(data, 2);
-        //ushort hdgs = BitConverter.ToUInt16(data, 4);
-        //float pitch = (float)pitchs / 65535 * 180 - 90;
-        //float roll = (float)rolls / 65535 * 360 - 180;
-        //float hdg = (float)hdgs / 65535 * 360;
-        //float srfVel = BitConverter.ToSingle(data, 6);
+        double longitude = (double)BitConverter.ToUInt32(data, 20) / uint.MaxValue * 360 - 180;
+        double latitude = (double)BitConverter.ToUInt32(data, 24) / uint.MaxValue * 180 - 90;
 
-        //gimbal.eulerAngles = new Vector3(-pitch, 0, roll);
-        gimbal.rotation = rotation;
-        speedIndicator.text = srfVel.ToString(".00") + " m/s";
-        //headingIndicator.text = Mathf.RoundToInt(hdg) + "°";
-        //compass.eulerAngles = new Vector3(0, 0, hdg);
-        Debug.Log(string.Format("vel:{0},rot:{1},flags:{2}", srfVel, rotation, flags));
-        //Debug.Log(string.Format("pitch:{0}\nroll:{1}\nhdg:{2}\nsrfvel:{3}\n", pitch, roll, hdg, srfVel));
+        var forward = rotation * new Vector3(0, 0, 1);
+        var horLength = forward.SetY(0).magnitude;
+        var pitch = Mathf.Atan2(forward.y, horLength) * Mathf.Rad2Deg;
+        var yaw = Mathf.Atan2(forward.x, forward.z) * Mathf.Rad2Deg;
+        var roll = rotation.eulerAngles.z;
+
+        gimbal.eulerAngles = new Vector3(0, yaw, 0);
+        gimbal.Rotate(new Vector3(-1, 0, 0), pitch, Space.World);
+        gimbal.Rotate(new Vector3(0, 0, -1), roll, Space.World);
+        speedIndicator.text = srfVel.magnitude.ToString(".00") + " m/s";
+        //Debug.Log((rotation * new Vector3(0, 0, 1)).ToString());
+        //Debug.Log((rotation * new Vector3(0, 1, 0)).ToString());
+        headingIndicator.text = Mathf.RoundToInt(yaw) + "°";
+        compass.eulerAngles = new Vector3(0, 0, yaw);
+        Debug.Log(string.Format("vel:{0},rot:{1},lon{2}/lat{3}", srfVel, rotation, longitude, latitude));
+
     }
 
     byte[] Bundle()

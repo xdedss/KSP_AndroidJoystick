@@ -31,9 +31,10 @@ public class Joystick : MonoBehaviour {
     private void Start()
     {
         rectTransform = GetComponent<RectTransform>();
-        radius = Screen.height / 4;
+        radius = Mathf.Min(Screen.height / 4, Screen.width / 8);
         //rectTransform.right = radius / 2;
         rectTransform.sizeDelta= new Vector2(radius, radius) * 2;
+        rectTransform.anchoredPosition = rectTransform.anchoredPosition.SetX(Mathf.Sign(rectTransform.anchoredPosition.x) * (160 + radius));
     }
 
     private void Update()
