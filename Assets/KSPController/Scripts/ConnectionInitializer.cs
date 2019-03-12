@@ -88,27 +88,27 @@ public class ConnectionInitializer : MonoBehaviour {
     {
         if (data.Length >= 2)
         {
-            var throttleValue = (float)data[0] / 255;
-            sliderThrottle.value = throttleValue;
-            ToggleButton.buttons[10].SetOn((data[1] & ByteMask(0)) != 0);
-            ToggleButton.buttons[11].SetOn((data[1] & ByteMask(1)) != 0);
-            ToggleButton.buttons[12].SetOn((data[1] & ByteMask(2)) != 0);
-            ToggleButton.buttons[13].SetOn((data[1] & ByteMask(3)) != 0);
-            ToggleButton.buttons[14].SetOn((data[1] & ByteMask(4)) != 0);
-            ToggleButton.buttons[15].SetOn((data[1] & ByteMask(5)) != 0);
+            var parsedData = new SocketDataParser.ServerSideInitialData(data);
+            sliderThrottle.value = parsedData.throttle;
+            ToggleButton.buttons[10].SetOn(parsedData.SAS);
+            ToggleButton.buttons[11].SetOn(parsedData.RCS);
+            ToggleButton.buttons[12].SetOn(parsedData.brake);
+            ToggleButton.buttons[13].SetOn(parsedData.light);
+            ToggleButton.buttons[14].SetOn(parsedData.gear);
+            ToggleButton.buttons[15].SetOn(parsedData.stage);
         }
     }
 
     void HandleInfoData(byte[] data)
     {
-        Vector3 srfVel = new Vector3(BitConverter.ToSingle(data, 0), BitConverter.ToSingle(data, 4), BitConverter.ToSingle(data, 8));
-        var rotX = (float)BitConverter.ToUInt16(data, 12) / 65535 * 2 - 1;
-        var rotY = (float)BitConverter.ToUInt16(data, 14) / 65535 * 2 - 1;
-        var rotZ = (float)BitConverter.ToUInt16(data, 16) / 65535 * 2 - 1;
-        var rotW = (float)BitConverter.ToUInt16(data, 18) / 65535 * 2 - 1;
-        Quaternion rotation = new Quaternion(rotX, rotY, rotZ, rotW);
-        double longitude = (double)BitConverter.ToUInt32(data, 20) / uint.MaxValue * 360 - 180;
-        double latitude = (double)BitConverter.ToUInt32(data, 24) / uint.MaxValue * 180 - 90;
+        var serverData = new SocketDataParser.ServerSideSocketData(data);
+
+        Vector3 srfVel = serverData.srfVel;
+        Quaternion rotation = serverData.rotation;
+        double longitude = serverData.longitude;
+        double latitude = serverData.latitude;
+        float altitudeSL = serverData.altitudeSealevel;//TODO: display altitude
+        float altitudeR = serverData.altitudeRadar;
 
         var forward = rotation * new Vector3(0, 0, 1);
         var horLength = forward.SetY(0).magnitude;
@@ -120,8 +120,6 @@ public class ConnectionInitializer : MonoBehaviour {
         gimbal.Rotate(new Vector3(-1, 0, 0), pitch, Space.World);
         gimbal.Rotate(new Vector3(0, 0, -1), roll, Space.World);
         speedIndicator.text = srfVel.magnitude.ToString(".00") + " m/s";
-        //Debug.Log((rotation * new Vector3(0, 0, 1)).ToString());
-        //Debug.Log((rotation * new Vector3(0, 1, 0)).ToString());
         headingIndicator.text = Mathf.RoundToInt(yaw) + "°";
         compass.eulerAngles = new Vector3(0, 0, yaw);
         Debug.Log(string.Format("vel:{0},rot:{1},lon{2}/lat{3}", srfVel, rotation, longitude, latitude));
@@ -130,27 +128,22 @@ public class ConnectionInitializer : MonoBehaviour {
 
     byte[] Bundle()
     {
-        var j1raw = joystickL.Value;
-        var j2raw = joystickR.Value;
-        j2raw.y = Mathf.Clamp(j2raw.y + sliderTrim.value * 0.6f, -1, 1);
-        var j1 = (j1raw + Vector2.one) / 2 * 255;
-        var j2 = (j2raw + Vector2.one) / 2 * 255;
-        var throttleB = sliderThrottle.value * 255;
-        var rud = (joystickRudder.Value + 1) / 2 * 255;
-        //return string.Format("{0}|{1}|{2}|{3}|", j1.x.ToString("0.00"), j1.y.ToString("0.00"), j2.x.ToString("0.00"), j2.y.ToString("0.00"));
-        var masks = GetMasks();
-        var bytes = new byte[]
+        var clientData = new SocketDataParser.ClientSideSocketData();
+        clientData.joystickL = joystickL.Value;
+        clientData.joystickR = joystickR.Value;
+        clientData.throttle = sliderThrottle.value;
+        clientData.steering = joystickRudder.Value;
+        for(int i = 0; i < 10; i++)
         {
-            (byte)Mathf.RoundToInt(j1.x),
-            (byte)Mathf.RoundToInt(j1.y),
-            (byte)Mathf.RoundToInt(j2.x),
-            (byte)Mathf.RoundToInt(j2.y),
-            (byte)Mathf.RoundToInt(throttleB),
-            (byte)Mathf.RoundToInt(rud),
-            masks[0],
-            masks[1],
-        };
-        return bytes;
+            clientData.actions[i] = toggles[i];
+        }
+        clientData.SAS = toggles[10];
+        clientData.RCS = toggles[11];
+        clientData.brake = toggles[12];
+        clientData.light = toggles[13];
+        clientData.gear = toggles[14];
+        clientData.stage = toggles[15];
+        return clientData;
     }
 
     byte[] GetMasks()
@@ -190,9 +183,17 @@ public class ConnectionInitializer : MonoBehaviour {
         while (true)
         {
             yield return new WaitForSeconds(0.05f);
+            var bundle = Bundle();
+
+            //string b = "send bundle";
+            //foreach (byte by in bundle)
+            //{
+            //    b += '|' + by;
+            //}
+            //Debug.Log(b);
             //try
             //{
-                socketClient.SendBytes(Bundle());
+                socketClient.SendBytes(bundle);
             //}
             //catch(Exception e)
             //{

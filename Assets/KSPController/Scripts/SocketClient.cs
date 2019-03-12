@@ -91,6 +91,12 @@ namespace SocketUtil
                 int length = _socket.Receive(buffer);
                 var bytes = new byte[length];
                 Array.ConstrainedCopy(buffer, 0, bytes, 0, length);
+                //string log = "";
+                //foreach (byte b in bytes)
+                //{
+                //    log += '|' + b;
+                //}
+                //Debug.Log(log);
                 return bytes;
             }
             return null;
@@ -100,6 +106,10 @@ namespace SocketUtil
             int length = _socket.Receive(buffer);
             var bytes = new byte[length];
             Array.ConstrainedCopy(buffer, 0, bytes, 0, length);
+            foreach(byte b in bytes)
+            {
+                Debug.Log(b);
+            }
             return bytes;
         }
     }
