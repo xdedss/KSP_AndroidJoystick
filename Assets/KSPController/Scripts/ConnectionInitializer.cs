@@ -122,7 +122,7 @@ public class ConnectionInitializer : MonoBehaviour {
         speedIndicator.text = srfVel.magnitude.ToString(".00") + " m/s";
         headingIndicator.text = Mathf.RoundToInt(yaw) + "°";
         compass.eulerAngles = new Vector3(0, 0, yaw);
-        Debug.Log(string.Format("vel:{0},rot:{1},lon{2}/lat{3}", srfVel, rotation, longitude, latitude));
+        Debug.Log(string.Format("vel:{0},rot:{1},lon{2}/lat{3}/alt{4}", srfVel, rotation, longitude, latitude, altitudeR));
 
     }
 
