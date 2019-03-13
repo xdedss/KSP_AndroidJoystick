@@ -6,14 +6,14 @@ public class SettingsPanel : MonoBehaviour {
 
     public static float inputSmooth;
     public static float inputCurve;
-    public static bool useSI;
+    public static int units;
     public static SettingsPanel instance;
 
     bool showing;
     public GameObject panel;
     public SettingsSlider inputSmoothSlider;
     public SettingsSlider inputCurveSlider;
-    public SettingsToggle unitToggle;
+    public SettingsMultipleToggle unitToggle;
 
     private void Awake()
     {
@@ -29,7 +29,7 @@ public class SettingsPanel : MonoBehaviour {
         {
             inputSmooth = inputSmoothSlider.value;
             inputCurve = inputCurveSlider.value;
-            useSI = unitToggle.value;
+            units = unitToggle.value;
         }
 	}
 
