@@ -36,9 +36,12 @@ static class SocketDataParser
             brake = (bytes[7] & ByteMask(4)) != 0;
             light = (bytes[7] & ByteMask(5)) != 0;
             gear = (bytes[7] & ByteMask(6)) != 0;
-            stage = (bytes[7] & ByteMask(7)) != 0;
-
-            byte controlFlags = bytes[8];
+            abort = (bytes[7] & ByteMask(7)) != 0;
+            stage = (bytes[8] & ByteMask(0)) != 0;
+            timeWarpMore = (bytes[8] & ByteMask(1)) != 0;
+            timeWarpLess = (bytes[8] & ByteMask(2)) != 0;
+            map = (bytes[8] & ByteMask(3)) != 0;
+            byte controlFlags = bytes[9];
             controlMode = (ControlMode)controlFlags;
         }
         public byte[] ToBytes()
@@ -50,6 +53,7 @@ static class SocketDataParser
             int controlFlags = (int)controlMode;
             byte mask1 = 0;
             byte mask2 = 0;
+            byte mask3 = 0;
             for (int i = 0; i < 8; i++)
             {
                 if (actions[i])
@@ -69,7 +73,11 @@ static class SocketDataParser
             if (brake) mask2 |= ByteMask(4);
             if (light) mask2 |= ByteMask(5);
             if (gear) mask2 |= ByteMask(6);
-            if (stage) mask2 |= ByteMask(7);
+            if (abort) mask2 |= ByteMask(7);
+            if (stage) mask3 |= ByteMask(0);
+            if (timeWarpMore) mask3 |= ByteMask(1);
+            if (timeWarpLess) mask3 |= ByteMask(2);
+            if (map) mask3 |= ByteMask(3);
             var bytes = new byte[]
             {
                     (byte)Mathf.RoundToInt(j1.x),
@@ -80,6 +88,7 @@ static class SocketDataParser
                     (byte)Mathf.RoundToInt(steeringB),
                     mask1,
                     mask2,
+                    mask3,
                     (byte)controlFlags,
             };
             return bytes;
@@ -99,7 +108,11 @@ static class SocketDataParser
         public bool brake;
         public bool light;
         public bool gear;
+        public bool abort;
         public bool stage;
+        public bool timeWarpMore;
+        public bool timeWarpLess;
+        public bool map;
     }
     public class ServerSideSocketData
     {
@@ -114,8 +127,8 @@ static class SocketDataParser
             rotation = new Quaternion(rotX, rotY, rotZ, rotW);
             longitude = (double)BitConverter.ToUInt32(bytes, 20) / uint.MaxValue * 360 - 180;
             latitude = (double)BitConverter.ToUInt32(bytes, 24) / uint.MaxValue * 180 - 90;
-            altitudeSealevel = half.FromBytes(bytes, 28);//TODO: display altitude
-            altitudeRadar = half.FromBytes(bytes, 30);
+            altitudeSealevel = (float)half.FromBytes(bytes, 28);//TODO: display altitude
+            altitudeRadar = (float)half.FromBytes(bytes, 30);
         }
         public byte[] ToBytes()
         {

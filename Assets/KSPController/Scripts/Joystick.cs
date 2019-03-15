@@ -4,7 +4,7 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
-public class Joystick : MonoBehaviour {
+public class Joystick : MonoBehaviour, IChangeColor {
 
     public float radius = 120;
     public RectTransform stick;
@@ -15,6 +15,11 @@ public class Joystick : MonoBehaviour {
     public Slider gyroSensitivity;
 
     Vector3 targetPosition = Vector2.zero;
+
+    Image imageBack;
+    Image imageHandle;
+    Text infoText;
+    RawImage[] centerlines;
 
     public Vector2 Value {
         get
@@ -31,10 +36,17 @@ public class Joystick : MonoBehaviour {
     private void Start()
     {
         rectTransform = GetComponent<RectTransform>();
-        radius = Mathf.Min(Screen.height / 4, Screen.width / 8);
+        //radius = Mathf.Min(Screen.height / 4, Screen.width / 8);
         //rectTransform.right = radius / 2;
-        rectTransform.sizeDelta= new Vector2(radius, radius) * 2;
-        rectTransform.anchoredPosition = rectTransform.anchoredPosition.SetX(Mathf.Sign(rectTransform.anchoredPosition.x) * (160 + radius));
+        //rectTransform.sizeDelta= new Vector2(radius, radius) * 2;
+        //rectTransform.anchoredPosition = rectTransform.anchoredPosition.SetX(Mathf.Sign(rectTransform.anchoredPosition.x) * (160 + radius));
+
+        ColorManager.instance.coloredElements.Add(this);
+        imageBack = GetComponent<Image>();
+        imageHandle = transform.Find("Joystick").GetComponent<Image>();
+        infoText = transform.Find("InfoText").GetComponent<Text>();
+        var centerlineParent = transform.Find("Centerline");
+        centerlines = new RawImage[] { centerlineParent.GetChild(0).GetComponent<RawImage>(), centerlineParent.GetChild(1).GetComponent<RawImage>() };
     }
 
     private void Update()
@@ -74,6 +86,15 @@ public class Joystick : MonoBehaviour {
         var clamped = Clamp(localPos.V2());
         targetPosition = clamped.V3(0);
         Value = clamped / radius;
+    }
+
+    public void UpdateColor()
+    {
+        imageBack.color = ColorManager.instance.joystickBg;
+        imageHandle.color = ColorManager.instance.joystickHandle;
+        infoText.color = ColorManager.instance.joystickInfo;
+        centerlines[0].color = ColorManager.instance.joystickCenterline;
+        centerlines[1].color = ColorManager.instance.joystickCenterline;
     }
 
     Vector2 Clamp(Vector2 pos)

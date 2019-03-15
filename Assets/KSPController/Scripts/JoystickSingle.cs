@@ -2,8 +2,9 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
+using UnityEngine.UI;
 
-public class JoystickSingle : MonoBehaviour {
+public class JoystickSingle : MonoBehaviour, IChangeColor {
 
     public float radius = 120;
     public RectTransform stick;
@@ -11,6 +12,10 @@ public class JoystickSingle : MonoBehaviour {
     RectTransform rectTransform;
 
     Vector3 targetPosition = Vector2.zero;
+
+    Image imageBack;
+    Image imageHandle;
+    Text infoText;
 
     public float Value
     {
@@ -28,10 +33,15 @@ public class JoystickSingle : MonoBehaviour {
     void Start ()
     {
         rectTransform = GetComponent<RectTransform>();
-        radius = rectTransform.sizeDelta.x / 2;
+        //radius = rectTransform.sizeDelta.x / 2;
         //radius = Mathf.Min(Screen.height / 4, Screen.width / 8);
         //rectTransform.right = radius / 2;
         //rectTransform.sizeDelta = rectTransform.sizeDelta.SetX(radius * 2);
+
+        ColorManager.instance.coloredElements.Add(this);
+        imageBack = GetComponent<Image>();
+        imageHandle = transform.Find("Joystick").GetComponent<Image>();
+        infoText = transform.Find("InfoText").GetComponent<Text>();
     }
 	
 	void Update () {
@@ -65,6 +75,13 @@ public class JoystickSingle : MonoBehaviour {
         var clamped = Clamp(localPos.V2());
         targetPosition = clamped.V3(0);
         Value = clamped.x / radius;
+    }
+
+    public void UpdateColor()
+    {
+        imageBack.color = ColorManager.instance.joystickBg;
+        imageHandle.color = ColorManager.instance.joystickHandle;
+        infoText.color = ColorManager.instance.joystickInfo;
     }
 
     Vector2 Clamp(Vector2 pos)

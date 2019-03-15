@@ -3,34 +3,25 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class ToggleButton : MonoBehaviour {
+public class ToggleButton : MonoBehaviour, IChangeColor {
 
     public static Dictionary<int, ToggleButton> buttons = new Dictionary<int, ToggleButton>();
-
-    //public bool on
-    //{
-    //    get
-    //    {
-    //        return on_;
-    //    }
-    //    set
-    //    {
-    //        SetOn(value);
-    //    }
-    //}
-    //bool on_ = false;
+    
     public int index;
-    public Color colorOn = new Color(0.5f, 1, 1);
-    public Color colorOff = new Color(0.8f, 0.8f, 0.8f);
+    public bool useHighlight;
     Button button;
+    Text buttonText;
+    public RawImage iconImage;
 
 	void Start () {
+        ColorManager.instance.coloredElements.Add(this);
         button = GetComponent<Button>();
         button.onClick.AddListener(OnClick);
         buttons.Add(index, this);
+        buttonText = transform.GetChild(0).GetComponent<Text>();
 	}
-	
-	void Update () {
+
+    void Update () {
 		
 	}
 
@@ -42,7 +33,7 @@ public class ToggleButton : MonoBehaviour {
         }
     }
 
-    void OnClick()
+    public void OnClick()
     {
         Toggle();
     }
@@ -50,8 +41,20 @@ public class ToggleButton : MonoBehaviour {
     public void Toggle()
     {
         ConnectionInitializer.instance.toggles[index] ^= true;
+        UpdateColor();
+    }
+
+    public void UpdateColor()
+    {
         var colors = button.colors;
-        colors.normalColor = ConnectionInitializer.instance.toggles[index] ? colorOn : colorOff;
+        colors.normalColor = ConnectionInitializer.instance.toggles[index] && useHighlight ? ColorManager.instance.buttonOn : ColorManager.instance.buttonOff;
+        colors.pressedColor = ColorManager.instance.buttonTouched;
+        colors.highlightedColor = ColorManager.instance.buttonTouched;
         button.colors = colors;
+        buttonText.color = ColorManager.instance.buttonText;
+        if (iconImage)
+        {
+            iconImage.color = ColorManager.instance.buttonText;
+        }
     }
 }

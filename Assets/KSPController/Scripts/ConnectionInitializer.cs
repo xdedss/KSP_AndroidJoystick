@@ -142,7 +142,7 @@ public class ConnectionInitializer : MonoBehaviour {
         clientData.brake = toggles[12];
         clientData.light = toggles[13];
         clientData.gear = toggles[14];
-        clientData.stage = toggles[15];
+        clientData.abort = toggles[15];
         return clientData;
     }
 
