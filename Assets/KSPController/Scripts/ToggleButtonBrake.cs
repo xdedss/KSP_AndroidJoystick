@@ -13,6 +13,7 @@ public class ToggleButtonBrake : MonoBehaviour, IChangeColor  {
     Button button;
     [SerializeField]
     Text buttonText;
+    public RawImage iconImage;
     [SerializeField]
     Button lockButton;
     [SerializeField]
@@ -86,5 +87,9 @@ public class ToggleButtonBrake : MonoBehaviour, IChangeColor  {
         colors.pressedColor = ColorManager.instance.buttonTouched;
         colors.highlightedColor = ColorManager.instance.buttonTouched;
         lockButton.colors = colors;
+        if (iconImage)
+        {
+            iconImage.color = ColorManager.instance.buttonText;
+        }
     }
 }

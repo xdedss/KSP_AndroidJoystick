@@ -9,6 +9,7 @@ using SocketDataParser;
 
 public class ConnectionInitializer : MonoBehaviour {
 
+    public static float idleTime;
     public static ConnectionInitializer instance;
     public Text debugText;
 
@@ -24,18 +25,19 @@ public class ConnectionInitializer : MonoBehaviour {
     public Slider sliderThrottle;
     public Slider sliderTrim;
     public JoystickSingle joystickRudder;
-    [NonSerialized]
-    public bool[] toggles = new bool[24];
+    public bool[] toggles;
 
     public NavControl navControl;
     public CompassLineControl compassControl;
     public AltitudeDisplayControl altitudeDisplay;
     public VelocityDisplayControl velocityDisplay;
     public PositionDisplayControl positionDisplay;
+    public VelocityVectorControl velocityVector;
     public Transform navball;
-    public TextMesh speedIndicator;
-    public TextMesh headingIndicator;
+    //public TextMesh speedIndicator;
+    //public TextMesh headingIndicator;
     public Transform compass;
+    public RawImage connectionIndicator;
 
     SocketClient socketClient;
     Coroutine sendCoroutine;
@@ -43,6 +45,7 @@ public class ConnectionInitializer : MonoBehaviour {
     private void Awake()
     {
         instance = this;
+        toggles = new bool[24];
         for (int i = 0; i < toggles.Length; i++)
         {
             toggles[i] = false;
@@ -54,9 +57,15 @@ public class ConnectionInitializer : MonoBehaviour {
     }
 	
 	void Update () {
+        idleTime += Time.deltaTime;
         if (socketClient != null)
         {
             Receive();
+        }
+        bool hasConnection = socketClient != null && idleTime < 1f;
+        if (hasConnection ^ connectionIndicator.enabled)
+        {
+            connectionIndicator.enabled = hasConnection;
         }
 	}
 
@@ -112,9 +121,10 @@ public class ConnectionInitializer : MonoBehaviour {
 
     void HandleInfoData(byte[] data)
     {
-        Debug.Log("bytes" + data[28] + "|" + data[29] + "|" + data[30] + "|" + data[31] + "|");
+        //Debug.Log("bytes" + data[28] + "|" + data[29] + "|" + data[30] + "|" + data[31] + "|");
         var serverData = new ServerSideSocketData(data);
         //lastReceivedData = serverData;
+        idleTime = 0;
 
         Vector3 srfVel = serverData.srfVel;
         Quaternion rotation = serverData.rotation;
@@ -134,12 +144,13 @@ public class ConnectionInitializer : MonoBehaviour {
         velocityDisplay.Set(srfVel.magnitude);
         altitudeDisplay.Set(altitudeR);
         positionDisplay.Set((float)longitude, (float)latitude);
+        velocityVector.Set(srfVel, rotation);
 
         navball.eulerAngles = new Vector3(0, yaw, 0);
         navball.Rotate(new Vector3(-1, 0, 0), pitch, Space.World);
         navball.Rotate(new Vector3(0, 0, -1), roll, Space.World);
-        speedIndicator.text = srfVel.magnitude.ToString(".00") + " m/s";
-        headingIndicator.text = Mathf.RoundToInt(yaw) + "°";
+        //speedIndicator.text = srfVel.magnitude.ToString(".00") + " m/s";
+        //headingIndicator.text = Mathf.RoundToInt(yaw) + "°";
         compass.eulerAngles = new Vector3(0, 0, yaw);
         Debug.Log(string.Format("alt{0}", altitudeSL));
 

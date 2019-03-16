@@ -7,6 +7,7 @@ public class SettingsPanel : MonoBehaviour {
     public static float inputSmooth;
     public static float inputCurve;
     public static int units;
+    public static bool useNavball;
     public static SettingsPanel instance;
 
     public float height;
@@ -19,6 +20,7 @@ public class SettingsPanel : MonoBehaviour {
     public SettingsSlider inputSmoothSlider;
     public SettingsSlider inputCurveSlider;
     public SettingsMultipleToggle unitToggle;
+    public SettingsToggle navballToggle;
 
     private void Awake()
     {
@@ -50,6 +52,7 @@ public class SettingsPanel : MonoBehaviour {
         inputSmooth = inputSmoothSlider.value;
         inputCurve = inputCurveSlider.value;
         units = unitToggle.value;
+        useNavball = navballToggle.value;
     }
 
     public float ConvertInput(float input)
