@@ -5,23 +5,34 @@ using UnityEngine.UI;
 using System.Net;
 using SocketUtil;
 using System;
+using SocketDataParser;
 
 public class ConnectionInitializer : MonoBehaviour {
 
     public static ConnectionInitializer instance;
     public Text debugText;
 
+    //public ServerSideSocketData lastReceivedData;
+
     [Space]
     public Gyro gyro;
     public Joystick joystickL;
     public Joystick joystickR;
+    private Vector2 smoothJoystickL;
+    private Vector2 smoothJoystickR;
     public InputField fieldIP;
     public Slider sliderThrottle;
     public Slider sliderTrim;
     public JoystickSingle joystickRudder;
-    public bool[] toggles = new bool[16];
+    [NonSerialized]
+    public bool[] toggles = new bool[24];
 
-    public Transform gimbal;
+    public NavControl navControl;
+    public CompassLineControl compassControl;
+    public AltitudeDisplayControl altitudeDisplay;
+    public VelocityDisplayControl velocityDisplay;
+    public PositionDisplayControl positionDisplay;
+    public Transform navball;
     public TextMesh speedIndicator;
     public TextMesh headingIndicator;
     public Transform compass;
@@ -88,11 +99,11 @@ public class ConnectionInitializer : MonoBehaviour {
     {
         if (data.Length >= 2)
         {
-            var parsedData = new SocketDataParser.ServerSideInitialData(data);
+            var parsedData = new ServerSideInitialData(data);
             sliderThrottle.value = parsedData.throttle;
             ToggleButton.buttons[10].SetOn(parsedData.SAS);
             ToggleButton.buttons[11].SetOn(parsedData.RCS);
-            ToggleButton.buttons[12].SetOn(parsedData.brake);
+            ToggleButtonBrake.buttons[12].SetLocked(parsedData.brake);
             ToggleButton.buttons[13].SetOn(parsedData.light);
             ToggleButton.buttons[14].SetOn(parsedData.gear);
             ToggleButton.buttons[15].SetOn(parsedData.stage);
@@ -101,7 +112,9 @@ public class ConnectionInitializer : MonoBehaviour {
 
     void HandleInfoData(byte[] data)
     {
-        var serverData = new SocketDataParser.ServerSideSocketData(data);
+        Debug.Log("bytes" + data[28] + "|" + data[29] + "|" + data[30] + "|" + data[31] + "|");
+        var serverData = new ServerSideSocketData(data);
+        //lastReceivedData = serverData;
 
         Vector3 srfVel = serverData.srfVel;
         Quaternion rotation = serverData.rotation;
@@ -116,21 +129,29 @@ public class ConnectionInitializer : MonoBehaviour {
         var yaw = Mathf.Atan2(forward.x, forward.z) * Mathf.Rad2Deg;
         var roll = rotation.eulerAngles.z;
 
-        gimbal.eulerAngles = new Vector3(0, yaw, 0);
-        gimbal.Rotate(new Vector3(-1, 0, 0), pitch, Space.World);
-        gimbal.Rotate(new Vector3(0, 0, -1), roll, Space.World);
+        navControl.Set(pitch, roll);
+        compassControl.Set(yaw);
+        velocityDisplay.Set(srfVel.magnitude);
+        altitudeDisplay.Set(altitudeR);
+        positionDisplay.Set((float)longitude, (float)latitude);
+
+        navball.eulerAngles = new Vector3(0, yaw, 0);
+        navball.Rotate(new Vector3(-1, 0, 0), pitch, Space.World);
+        navball.Rotate(new Vector3(0, 0, -1), roll, Space.World);
         speedIndicator.text = srfVel.magnitude.ToString(".00") + " m/s";
         headingIndicator.text = Mathf.RoundToInt(yaw) + "°";
         compass.eulerAngles = new Vector3(0, 0, yaw);
-        Debug.Log(string.Format("vel:{0},rot:{1},lon{2}/lat{3}/alt{4}", srfVel, rotation, longitude, latitude, altitudeR));
+        Debug.Log(string.Format("alt{0}", altitudeSL));
 
     }
 
     byte[] Bundle()
     {
-        var clientData = new SocketDataParser.ClientSideSocketData();
-        clientData.joystickL = joystickL.Value;
-        clientData.joystickR = joystickR.Value;
+        var clientData = new ClientSideSocketData();
+        smoothJoystickL = Vector2.Lerp(smoothJoystickL, joystickL.Value, Mathf.Pow(0.01f, SettingsPanel.inputSmooth));
+        smoothJoystickR = Vector2.Lerp(smoothJoystickR, joystickR.Value, Mathf.Pow(0.01f, SettingsPanel.inputSmooth));
+        clientData.joystickL = smoothJoystickL;
+        clientData.joystickR = smoothJoystickR;
         clientData.throttle = sliderThrottle.value;
         clientData.steering = joystickRudder.Value;
         for(int i = 0; i < 10; i++)
@@ -143,6 +164,10 @@ public class ConnectionInitializer : MonoBehaviour {
         clientData.light = toggles[13];
         clientData.gear = toggles[14];
         clientData.abort = toggles[15];
+        clientData.stage = toggles[16];
+        clientData.timeWarpMore = toggles[17];
+        clientData.timeWarpLess = toggles[18];
+        clientData.map = toggles[19];
         return clientData;
     }
 

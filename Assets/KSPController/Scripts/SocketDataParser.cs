@@ -1,12 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using UnityEngine;
 
-static class SocketDataParser
+namespace SocketDataParser
 {
-
     public class ClientSideSocketData
     {
         public ClientSideSocketData() { actions = new bool[10]; }
@@ -97,6 +93,10 @@ static class SocketDataParser
         {
             return data.ToBytes();
         }
+        static byte ByteMask(int pos)
+        {
+            return (byte)(1 << pos);
+        }
         public ControlMode controlMode;
         public Vector2 joystickL;
         public Vector2 joystickR;
@@ -114,6 +114,7 @@ static class SocketDataParser
         public bool timeWarpLess;
         public bool map;
     }
+
     public class ServerSideSocketData
     {
         public ServerSideSocketData() { }
@@ -147,22 +148,26 @@ static class SocketDataParser
             var altR = ((half)altitudeRadar).GetBytes();
 
             return new byte[] {
-                    velX[0], velX[1], velX[2], velX[3],//0-3
-                    velY[0], velY[1], velY[2], velY[3],//4-7
-                    velZ[0], velZ[1], velZ[2], velZ[3],//8-11
-                    rotX[0], rotX[1],//12 13
-                    rotY[0], rotY[1],//14 15
-                    rotZ[0], rotZ[1],//16 17
-                    rotW[0], rotW[1],//18 19
-                    lon[0], lon[1], lon[2], lon[3],//20-23
-                    lat[0], lat[1], lat[2], lat[3],//24-27
-                    altSL[0], altSL[1],//28 29
-                    altR[0], altR[1],//30 31
-                };
+            velX[0], velX[1], velX[2], velX[3],//0-3
+            velY[0], velY[1], velY[2], velY[3],//4-7
+            velZ[0], velZ[1], velZ[2], velZ[3],//8-11
+            rotX[0], rotX[1],//12 13
+            rotY[0], rotY[1],//14 15
+            rotZ[0], rotZ[1],//16 17
+            rotW[0], rotW[1],//18 19
+            lon[0], lon[1], lon[2], lon[3],//20-23
+            lat[0], lat[1], lat[2], lat[3],//24-27
+            altSL[0], altSL[1],//28 29
+            altR[0], altR[1],//30 31
+        };
         }
         public static implicit operator byte[] (ServerSideSocketData data)
         {
             return data.ToBytes();
+        }
+        static byte ByteMask(int pos)
+        {
+            return (byte)(1 << pos);
         }
         public Vector3 srfVel;
         public Quaternion rotation;
@@ -202,6 +207,10 @@ static class SocketDataParser
         {
             return data.ToBytes();
         }
+        static byte ByteMask(int pos)
+        {
+            return (byte)(1 << pos);
+        }
         public float throttle;
         public bool SAS;
         public bool RCS;
@@ -216,11 +225,6 @@ static class SocketDataParser
         Rotation = 0,
         Docking = 1,
         Rover = 2,
-    }
-
-    static byte ByteMask(int pos)
-    {
-        return (byte)(1 << pos);
     }
 
 }

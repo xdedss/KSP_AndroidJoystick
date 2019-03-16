@@ -5,6 +5,8 @@ using UnityEngine.UI;
 
 public class ToggleButtonBrake : MonoBehaviour, IChangeColor  {
 
+    public static Dictionary<int, ToggleButtonBrake> buttons = new Dictionary<int, ToggleButtonBrake>();
+
     public int index;
     public bool useHighlight;
     [SerializeField]
@@ -22,6 +24,7 @@ public class ToggleButtonBrake : MonoBehaviour, IChangeColor  {
     void Start ()
     {
         ColorManager.instance.coloredElements.Add(this);
+        buttons.Add(index, this);
     }
 	
 	void Update () {
@@ -71,8 +74,8 @@ public class ToggleButtonBrake : MonoBehaviour, IChangeColor  {
     {
         var colors = button.colors;
         colors.normalColor = ConnectionInitializer.instance.toggles[index] && useHighlight ? ColorManager.instance.buttonOn : ColorManager.instance.buttonOff;
-        colors.pressedColor = ColorManager.instance.buttonTouched;
-        colors.highlightedColor = ColorManager.instance.buttonTouched;
+        colors.pressedColor = colors.normalColor;
+        colors.highlightedColor = colors.normalColor;
         button.colors = colors;
         buttonText.color = ColorManager.instance.buttonText;
 

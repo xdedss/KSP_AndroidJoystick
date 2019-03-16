@@ -18,7 +18,7 @@ public class ToggleButton : MonoBehaviour, IChangeColor {
         button = GetComponent<Button>();
         button.onClick.AddListener(OnClick);
         buttons.Add(index, this);
-        buttonText = transform.GetChild(0).GetComponent<Text>();
+        buttonText = transform.Find("Text").GetComponent<Text>();
 	}
 
     void Update () {
@@ -51,6 +51,7 @@ public class ToggleButton : MonoBehaviour, IChangeColor {
         colors.pressedColor = ColorManager.instance.buttonTouched;
         colors.highlightedColor = ColorManager.instance.buttonTouched;
         button.colors = colors;
+        //Debug.Log(gameObject.name);
         buttonText.color = ColorManager.instance.buttonText;
         if (iconImage)
         {

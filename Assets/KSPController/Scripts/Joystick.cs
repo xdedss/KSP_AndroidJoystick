@@ -20,6 +20,8 @@ public class Joystick : MonoBehaviour, IChangeColor {
     Image imageHandle;
     Text infoText;
     RawImage[] centerlines;
+    Transform markBL;
+    Transform markUR;
 
     public Vector2 Value {
         get
@@ -47,6 +49,9 @@ public class Joystick : MonoBehaviour, IChangeColor {
         infoText = transform.Find("InfoText").GetComponent<Text>();
         var centerlineParent = transform.Find("Centerline");
         centerlines = new RawImage[] { centerlineParent.GetChild(0).GetComponent<RawImage>(), centerlineParent.GetChild(1).GetComponent<RawImage>() };
+        markBL = transform.Find("MarkBL");
+        markUR = transform.Find("MarkUR");
+        radius = (markUR.position.x - markBL.position.x) / 2;
     }
 
     private void Update()
@@ -83,7 +88,11 @@ public class Joystick : MonoBehaviour, IChangeColor {
 
     void ChangePosition(Vector3 localPos)
     {
-        var clamped = Clamp(localPos.V2());
+        var raw = localPos.V2();
+        var rawinput = raw / radius;
+        var curveInput = new Vector2(SettingsPanel.instance.ConvertInput(rawinput.x), SettingsPanel.instance.ConvertInput(rawinput.y));
+        var curvePos = curveInput * radius;
+        var clamped = Clamp(curvePos);
         targetPosition = clamped.V3(0);
         Value = clamped / radius;
     }

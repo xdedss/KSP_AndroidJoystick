@@ -16,6 +16,8 @@ public class JoystickSingle : MonoBehaviour, IChangeColor {
     Image imageBack;
     Image imageHandle;
     Text infoText;
+    Transform markBL;
+    Transform markUR;
 
     public float Value
     {
@@ -42,6 +44,10 @@ public class JoystickSingle : MonoBehaviour, IChangeColor {
         imageBack = GetComponent<Image>();
         imageHandle = transform.Find("Joystick").GetComponent<Image>();
         infoText = transform.Find("InfoText").GetComponent<Text>();
+
+        markBL = transform.Find("MarkBL");
+        markUR = transform.Find("MarkUR");
+        radius = (markUR.position.x - markBL.position.x) / 2;
     }
 	
 	void Update () {
