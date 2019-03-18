@@ -8,6 +8,9 @@ public class SettingsPanel : MonoBehaviour {
     public static float inputCurve;
     public static int units;
     public static bool useNavball;
+    public static float roll2yaw;
+    public static float roll2steer;
+    public static float yaw2steer;
     public static SettingsPanel instance;
 
     public float height;
@@ -21,6 +24,9 @@ public class SettingsPanel : MonoBehaviour {
     public SettingsSlider inputCurveSlider;
     public SettingsMultipleToggle unitToggle;
     public SettingsToggle navballToggle;
+    public SettingsSlider Roll2YawSlider;
+    public SettingsSlider Roll2SteerSlider;
+    public SettingsSlider Yaw2SteerSlider;
 
     private void Awake()
     {
@@ -53,6 +59,9 @@ public class SettingsPanel : MonoBehaviour {
         inputCurve = inputCurveSlider.value;
         units = unitToggle.value;
         useNavball = navballToggle.value;
+        roll2yaw = Roll2YawSlider.value;
+        roll2steer = Roll2SteerSlider.value;
+        yaw2steer = Yaw2SteerSlider.value;
     }
 
     public float ConvertInput(float input)
@@ -104,5 +113,9 @@ public class SettingsPanel : MonoBehaviour {
         inputSmoothSlider.RestoreDefault();
         inputCurveSlider.RestoreDefault();
         unitToggle.RestoreDefault();
+        navballToggle.RestoreDefault();
+        Roll2YawSlider.RestoreDefault();
+        Roll2SteerSlider.RestoreDefault();
+        Yaw2SteerSlider.RestoreDefault();
     }
 }
