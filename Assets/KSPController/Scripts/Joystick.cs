@@ -13,6 +13,7 @@ public class Joystick : MonoBehaviour, IChangeColor {
 
     public bool gyroOverride = false;
     public Slider gyroSensitivity;
+    public Vector2 mappings;
 
     Vector3 targetPosition = Vector2.zero;
 
@@ -56,9 +57,15 @@ public class Joystick : MonoBehaviour, IChangeColor {
 
     private void Update()
     {
-        if(gyroOverride && !isDragging)
+        if (!isDragging)
         {
-            ChangePosition(radius * Gyro.Value * gyroSensitivity.value);
+            Vector2 additive = new Vector2(0, 0);
+            if (gyroOverride)
+            {
+                additive += Gyro.Value * gyroSensitivity.value;
+            }
+            additive += mappings;
+            ChangePosition(radius * additive);
         }
 
         var target = transform.position + targetPosition;

@@ -11,6 +11,8 @@ public class JoystickSingle : MonoBehaviour, IChangeColor {
     public bool isDragging = false;
     RectTransform rectTransform;
 
+    public float mappings;
+
     Vector3 targetPosition = Vector2.zero;
 
     Image imageBack;
@@ -51,6 +53,13 @@ public class JoystickSingle : MonoBehaviour, IChangeColor {
     }
 	
 	void Update () {
+        if (!isDragging)
+        {
+            float additive = 0;
+            additive += mappings;
+            ChangePosition(new Vector2(radius * additive, 0));
+        }
+
         var target = transform.position + targetPosition;
         stick.position = Vector3.Lerp(stick.position, target, Mathf.Clamp01(Time.deltaTime * 20));
     }

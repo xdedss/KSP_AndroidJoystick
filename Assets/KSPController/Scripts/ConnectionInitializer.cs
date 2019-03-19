@@ -54,6 +54,7 @@ public class ConnectionInitializer : MonoBehaviour {
 
     void Start () {
         fieldIP.text = PlayerPrefs.GetString("server", "");
+        Screen.sleepTimeout = SleepTimeout.NeverSleep;
     }
 	
 	void Update () {
