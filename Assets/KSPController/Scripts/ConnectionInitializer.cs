@@ -109,14 +109,22 @@ public class ConnectionInitializer : MonoBehaviour {
     {
         if (data.Length >= 2)
         {
-            var parsedData = new ServerSideInitialData(data);
+            var parsedData = new ClientSideSocketData(data);
             sliderThrottle.value = parsedData.throttle;
             ToggleButton.buttons[10].SetOn(parsedData.SAS);
             ToggleButton.buttons[11].SetOn(parsedData.RCS);
             ToggleButtonBrake.buttons[12].SetLocked(parsedData.brake);
             ToggleButton.buttons[13].SetOn(parsedData.light);
             ToggleButton.buttons[14].SetOn(parsedData.gear);
-            ToggleButton.buttons[15].SetOn(parsedData.stage);
+            ToggleButton.buttons[15].SetOn(parsedData.abort);
+            ToggleButton.buttons[16].SetOn(parsedData.stage);
+            ToggleButton.buttons[17].SetOn(parsedData.timeWarpMore);
+            ToggleButton.buttons[18].SetOn(parsedData.timeWarpLess);
+            ToggleButton.buttons[19].SetOn(parsedData.map);
+            for (int i = 0; i < 10; i++)
+            {
+                ToggleButton.buttons[i].SetOn(parsedData.actions[i]);
+            }
         }
     }
 
