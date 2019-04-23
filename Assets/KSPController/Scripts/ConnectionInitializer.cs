@@ -33,6 +33,7 @@ public class ConnectionInitializer : MonoBehaviour {
     public VelocityDisplayControl velocityDisplay;
     public PositionDisplayControl positionDisplay;
     public VelocityVectorControl velocityVector;
+    public ILSControl iLSControl;
     public Transform navball;
     //public TextMesh speedIndicator;
     //public TextMesh headingIndicator;
@@ -154,6 +155,7 @@ public class ConnectionInitializer : MonoBehaviour {
         altitudeDisplay.Set(altitudeR);
         positionDisplay.Set((float)longitude, (float)latitude);
         velocityVector.Set(srfVel, rotation);
+        iLSControl.UpdatePosition(latitude, longitude, altitudeSL);
 
         navball.eulerAngles = new Vector3(0, yaw, 0);
         navball.Rotate(new Vector3(-1, 0, 0), pitch, Space.World);
@@ -161,7 +163,7 @@ public class ConnectionInitializer : MonoBehaviour {
         //speedIndicator.text = srfVel.magnitude.ToString(".00") + " m/s";
         //headingIndicator.text = Mathf.RoundToInt(yaw) + "°";
         compass.eulerAngles = new Vector3(0, 0, yaw);
-        Debug.Log(string.Format("alt{0}", altitudeSL));
+        //Debug.Log(string.Format("alt{0}", altitudeSL));
 
     }
 
@@ -227,6 +229,7 @@ public class ConnectionInitializer : MonoBehaviour {
     {
         while (true)
         {
+            Debug.Log("sending");
             yield return new WaitForSeconds(0.05f);
             var bundle = Bundle();
 

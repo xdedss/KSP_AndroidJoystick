@@ -3025,7 +3025,7 @@ Transform:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 306990942}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: -0.11, z: -0.198}
+  m_LocalPosition: {x: 0, y: -0.11, z: -0.07}
   m_LocalScale: {x: 1, y: 0.02, z: 1}
   m_Children: []
   m_Father: {fileID: 1323435986}
@@ -9080,7 +9080,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 0, y: -0.00012207031}
+  m_AnchoredPosition: {x: 0, y: -0.000061035156}
   m_SizeDelta: {x: 0, y: 750.8}
   m_Pivot: {x: 0, y: 1}
 --- !u!114 &1006337106
@@ -11526,6 +11526,7 @@ GameObject:
   - component: {fileID: 1323435988}
   - component: {fileID: 1323435987}
   - component: {fileID: 1323435990}
+  - component: {fileID: 1323435991}
   m_Layer: 0
   m_Name: AlterHUD
   m_TagString: Untagged
@@ -11556,7 +11557,7 @@ MeshCollider:
   m_GameObject: {fileID: 1323435985}
   m_Material: {fileID: 0}
   m_IsTrigger: 0
-  m_Enabled: 1
+  m_Enabled: 0
   serializedVersion: 3
   m_Convex: 0
   m_CookingOptions: 14
@@ -11616,6 +11617,19 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   mat: {fileID: 2100000, guid: c7560b1669a394440bf0990df5427bcd, type: 2}
+--- !u!114 &1323435991
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1323435985}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: aed51ad87a017f3449ce1930658891ec, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  lineHor: {fileID: 1664687997}
+  lineVer: {fileID: 306990944}
 --- !u!1 &1323738493
 GameObject:
   m_ObjectHideFlags: 0
@@ -14655,7 +14669,7 @@ Transform:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 1664687995}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -0.14, y: 0, z: -0.19799998}
+  m_LocalPosition: {x: -0.14, y: 0, z: -0.07}
   m_LocalScale: {x: 0.02, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 1323435986}
@@ -18076,8 +18090,8 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 431340117}
   m_HandleRect: {fileID: 431340116}
   m_Direction: 2
-  m_Value: 1
-  m_Size: 0.9999998
+  m_Value: 0
+  m_Size: 0.5162994
   m_NumberOfSteps: 0
   m_OnValueChanged:
     m_PersistentCalls:
@@ -18974,6 +18988,7 @@ MonoBehaviour:
   velocityDisplay: {fileID: 1484328202}
   positionDisplay: {fileID: 840251811}
   velocityVector: {fileID: 247819289}
+  iLSControl: {fileID: 1323435991}
   navball: {fileID: 1004956717}
   compass: {fileID: 569673110}
   connectionIndicator: {fileID: 1679541058}
