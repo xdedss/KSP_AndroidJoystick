@@ -11,23 +11,31 @@ static class RunwayManager
         runways.Add(new Runway("Kerbin 600000 KSC -0.0487433327761511 -74.7045260278729 70.2358580782311 90 5 10000"));
     }
 
-    public static Runway FindNearestRunway(double lat, double lon, string bodyName)
+    public static Runway FindNearestRunway(double lat, double lon, float altSL, string bodyName, out float horTan, out float verTan)
     {
         Runway nearest = null;
-        double nearestDistance = 100000;
-        foreach(Runway runway in runways)
+        double nearestTan = 100000;
+        float dist_, horTan_ = float.PositiveInfinity, verTan_ = float.PositiveInfinity;
+        foreach (Runway runway in runways)
         {
             if (runway.bodyName == bodyName)
             {
                 double distance = SphericDistance(lat, lon, runway.lat, runway.lon, runway.seaLevel);
-                Debug.Log("distance" + distance + " angle" + SphericAngle(lat, lon, runway.lat, runway.lon));
-                if (distance < nearestDistance && distance < runway.length)
+                //Debug.Log("distance" + distance + " angle" + SphericAngle(lat, lon, runway.lat, runway.lon));
+                if (distance < 100000)
                 {
-                    nearest = runway;
-                    nearestDistance = distance;
+                    runway.AssessBias(lat, lon, altSL, out horTan_, out verTan_, out dist_);
+                    float horabs = Mathf.Abs(horTan_);
+                    if (dist_ > 0 && dist_ < runway.length && horabs < nearestTan && horabs < 0.2f && Mathf.Abs(verTan_) < 0.2f)
+                    {
+                        nearest = runway;
+                        nearestTan = horabs;
+                    }
                 }
             }
         }
+        verTan = verTan_;
+        horTan = horTan_;
         return nearest;
     }
 
@@ -101,7 +109,7 @@ static class RunwayManager
             LandingRight = rot * Vector3.left;
         }
 
-        public void AssessBias(double lat_, double lon_, float altSL_, out float horTan, out float verTan)
+        public void AssessBias(double lat_, double lon_, float altSL_, out float horTan, out float verTan, out float directionalDist)
         {
             Vector3 landingDir;
             Vector3 LandingRight;
@@ -115,6 +123,7 @@ static class RunwayManager
 
             horTan = tangentDistance / directionalDistance;
             verTan = altitudeDistance / directionalDistance;
+            directionalDist = directionalDistance;
         }
         
     }
