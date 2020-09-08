@@ -8,7 +8,10 @@ static class RunwayManager
 
     public static void Init()
     {
-        runways.Add(new Runway("Kerbin 600000 KSC -0.0487433327761511 -74.7045260278729 70.2358580782311 90 5 10000"));
+        runways.Add(new Runway("Kerbin,600000,KSC 09,-0.048776,-74.699720,70.235,90,3,30000"));
+        runways.Add(new Runway("Kerbin,600000,KSC 27,-0.050091,-74.516959,70.235,270,3,30000"));
+        runways.Add(new Runway("Kerbin,600000,ISL 09,-1.515880,-71.853727,133.8,90,3,10000"));
+        runways.Add(new Runway("Kerbin,600000,ISL 27,-1.517726,-71.965230,133.8,270,3,10000"));
     }
 
     public static Runway FindNearestRunway(double lat, double lon, float altSL, string bodyName, out float horTan, out float verTan)
@@ -79,7 +82,7 @@ static class RunwayManager
 
         public Runway(string data)
         {
-            string[] datas = data.Split(' ');
+            string[] datas = data.Split(',');
             this.bodyName = datas[0];
             this.seaLevel = double.Parse(datas[1]);
             this.siteName = datas[2];
@@ -126,6 +129,10 @@ static class RunwayManager
             directionalDist = directionalDistance;
         }
         
+        public string GetIdStr()
+        {
+            return siteName;
+        }
     }
 }
 

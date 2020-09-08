@@ -20,6 +20,8 @@ namespace SocketUtil
         private Socket _socket = null;
         private byte[] buffer = new byte[1024 * 1024 * 2];
 
+        public bool connected = false;
+
         /// <summary>
         /// 构造函数
         /// </summary>
@@ -51,7 +53,8 @@ namespace SocketUtil
                 IPEndPoint endPoint = new IPEndPoint(address, _port);
                 //4.0 建立连接
                 _socket.Connect(endPoint);
-                Debug.Log("连接服务器成功");
+                Debug.Log("server connected");
+                connected = true;
                 //5.0 接收数据
                 //int length = _socket.Receive(buffer);
                 //Debug.Log(string.Format("接收服务器{0},消息:{1}", _socket.RemoteEndPoint.ToString(), Encoding.ASCII.GetString(buffer, 0, length)));
@@ -66,9 +69,15 @@ namespace SocketUtil
             }
             catch (Exception ex)
             {
-                _socket.Shutdown(SocketShutdown.Both);
-                _socket.Close();
-                Console.WriteLine(ex.Message);
+                ConnectionInitializer.QueueDebugExc(ex);
+                try
+                {
+                    _socket.Shutdown(SocketShutdown.Both);
+                    _socket.Close();
+                }catch(Exception ex_)
+                {
+                    //Debug.Log(ex_.Message);
+                }
             }
             //Debug.Log("发送消息结束");
             //Console.ReadKey();
@@ -108,7 +117,7 @@ namespace SocketUtil
             Array.ConstrainedCopy(buffer, 0, bytes, 0, length);
             foreach(byte b in bytes)
             {
-                Debug.Log(b);
+                //Debug.Log(b);
             }
             return bytes;
         }

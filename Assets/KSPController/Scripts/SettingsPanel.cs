@@ -9,6 +9,7 @@ public class SettingsPanel : MonoBehaviour {
     public static float inputCurve;
     public static int velocityUnit;
     public static int altitudeUnit;
+    public static int ILSMode;
     public static bool useNavball;
     //public static float roll2yaw;
     //public static float roll2steer;
@@ -34,6 +35,7 @@ public class SettingsPanel : MonoBehaviour {
     public SettingsSlider inputCurveSlider;
     public SettingsMultipleToggle velocityUnitToggle;
     public SettingsMultipleToggle altitudeUnitToggle;
+    public SettingsMultipleToggle ILSToggle;
     public SettingsToggle navballToggle;
     public SettingsSlider Roll2YawSlider;
     public SettingsSlider Roll2SteerSlider;
@@ -72,6 +74,7 @@ public class SettingsPanel : MonoBehaviour {
         velocityUnit = velocityUnitToggle.value;
         altitudeUnit = altitudeUnitToggle.value;
         useNavball = navballToggle.value;
+        ILSMode = ILSToggle.value;
         //roll2yaw = Roll2YawSlider.value;
         //roll2steer = Roll2SteerSlider.value;
         //yaw2steer = Yaw2SteerSlider.value;

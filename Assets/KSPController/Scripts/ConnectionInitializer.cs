@@ -11,7 +11,8 @@ public class ConnectionInitializer : MonoBehaviour {
 
     public static float idleTime;
     public static ConnectionInitializer instance;
-    public Text debugText;
+    public GameObject debugPanel;
+    public InputField debugText;
 
     //public ServerSideSocketData lastReceivedData;
 
@@ -68,6 +69,14 @@ public class ConnectionInitializer : MonoBehaviour {
         if (hasConnection ^ connectionIndicator.enabled)
         {
             connectionIndicator.enabled = hasConnection;
+            if (!hasConnection)
+            {
+                QueueDebugMsg("Connection lost (server didn't response in time)");
+            }
+        }
+        if(errQueue.Count > 0 && !debugPanel.activeInHierarchy)
+        {
+            DebugMsg();
         }
 	}
 
@@ -75,26 +84,33 @@ public class ConnectionInitializer : MonoBehaviour {
     {
         var split = fieldIP.text.Split(':');
         if (split.Length <= 0) return;
-        PlayerPrefs.SetString("server", fieldIP.text);
-        PlayerPrefs.Save();
+        try
+        {
+            PlayerPrefs.SetString("server", fieldIP.text);
+            PlayerPrefs.Save();
 
-        var port = 23333;
-        var ip = split[0];
-        if(split.Length > 1)
-        {
-            if(!int.TryParse(split[1], out port))
+            var port = 23333;
+            var ip = split[0];
+            if (split.Length > 1)
             {
-                port = 23333;
+                if (!int.TryParse(split[1], out port))
+                {
+                    port = 23333;
+                }
             }
+            socketClient = new SocketClient(ip, port);
+            socketClient.StartClient();
+            HandleInitialData(socketClient.ReceiveBlocked());
+            if (sendCoroutine != null)
+            {
+                StopCoroutine(sendCoroutine);
+            }
+            sendCoroutine = StartCoroutine(SendBundle());
         }
-        socketClient = new SocketClient(ip, port);
-        socketClient.StartClient();
-        HandleInitialData(socketClient.ReceiveBlocked());
-        if(sendCoroutine != null)
+        catch(Exception e)
         {
-            StopCoroutine(sendCoroutine);
+            QueueDebugExc(e);
         }
-        sendCoroutine = StartCoroutine(SendBundle());
     }
 
     void Receive()
@@ -231,7 +247,6 @@ public class ConnectionInitializer : MonoBehaviour {
         {
             Debug.Log("sending");
             yield return new WaitForSeconds(0.05f);
-            var bundle = Bundle();
 
             //string b = "send bundle";
             //foreach (byte by in bundle)
@@ -239,15 +254,38 @@ public class ConnectionInitializer : MonoBehaviour {
             //    b += '|' + by;
             //}
             //Debug.Log(b);
-            //try
-            //{
+            try
+            {
+                var bundle = Bundle();
                 socketClient.SendBytes(bundle);
-            //}
-            //catch(Exception e)
-            //{
-            //    Debug.LogError(e.Message + '\n' + e.StackTrace);
-            //    break;
-            //}
+            }
+            catch (Exception e)
+            {
+                Debug.LogError(e.Message + '\n' + e.StackTrace);
+                break;
+            }
         }
+    }
+
+    private static Queue<string> errQueue = new Queue<string>();
+
+    public static void DebugMsg()
+    {
+        if(errQueue.Count > 0)
+        {
+            instance.debugPanel.SetActive(true);
+            instance.debugText.text = errQueue.Dequeue();
+            Debug.Log(instance.debugText.text);
+        }
+    }
+
+    public static void QueueDebugMsg(string msg)
+    {
+        errQueue.Enqueue(msg);
+    }
+
+    public static void QueueDebugExc(Exception e)
+    {
+        QueueDebugMsg(e.Message + "\n" + e.StackTrace);
     }
 }
