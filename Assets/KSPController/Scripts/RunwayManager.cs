@@ -18,6 +18,8 @@ static class RunwayManager
     {
         Runway nearest = null;
         double nearestTan = 100000;
+        verTan = float.NaN;
+        horTan = float.NaN;
         float dist_, horTan_ = float.PositiveInfinity, verTan_ = float.PositiveInfinity;
         foreach (Runway runway in runways)
         {
@@ -33,12 +35,12 @@ static class RunwayManager
                     {
                         nearest = runway;
                         nearestTan = horabs;
+                        verTan = verTan_;
+                        horTan = horTan_;
                     }
                 }
             }
         }
-        verTan = verTan_;
-        horTan = horTan_;
         return nearest;
     }
 
@@ -127,6 +129,15 @@ static class RunwayManager
             horTan = tangentDistance / directionalDistance;
             verTan = altitudeDistance / directionalDistance;
             directionalDist = directionalDistance;
+
+
+            //if (siteName == "KSC 27")
+            //{
+            //    Debug.Log("directional :    " + landingDir.ToString()
+            //        + "\n   right :    " + LandingRight.ToString()
+            //        + "\n   directionalDistance :    " + directionalDistance.ToString()
+            //        + "\n   tangentDistance :    " + tangentDistance.ToString());
+            //}
         }
         
         public string GetIdStr()

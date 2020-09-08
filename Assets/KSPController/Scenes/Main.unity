@@ -673,6 +673,7 @@ MonoBehaviour:
   inputCurveSlider: {fileID: 1507629654}
   velocityUnitToggle: {fileID: 197532184}
   altitudeUnitToggle: {fileID: 1245193282}
+  ILSToggle: {fileID: 1193792442}
   navballToggle: {fileID: 1093485245}
   Roll2YawSlider: {fileID: 1551536624}
   Roll2SteerSlider: {fileID: 958828952}
@@ -9488,7 +9489,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 0, y: -0.00012207031}
+  m_AnchoredPosition: {x: 0, y: -0.000061035156}
   m_SizeDelta: {x: 0, y: 750.8}
   m_Pivot: {x: 0, y: 1}
 --- !u!114 &1006337106
@@ -18963,8 +18964,8 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 431340117}
   m_HandleRect: {fileID: 431340116}
   m_Direction: 2
-  m_Value: 1
-  m_Size: 0.9999998
+  m_Value: 0
+  m_Size: 1
   m_NumberOfSteps: 0
   m_OnValueChanged:
     m_PersistentCalls:
